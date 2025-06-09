@@ -16,7 +16,7 @@ export interface Prompt {
   id: string;
   text: string;
   category: PromptCategory;
-  description?: string;
+  description?: string; // Made description optional
   icon?: LucideIcon;
   createdAt: Date;
 }

@@ -2,7 +2,6 @@
 'use server';
 
 import { z } from 'zod';
-import { categorizeImagePrompts } from '@/ai/flows/categorize-prompt';
 import type { Prompt, PromptCategory } from '@/types';
 import { 
   Palette, 
@@ -18,7 +17,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 
 const SubmitPromptSchema = z.object({
-  promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(2000, { message: 'Prompt must be at most 2000 characters long.' }), // Increased max length for detailed prompts
+  promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(2000, { message: 'Prompt must be at most 2000 characters long.' }),
 });
 
 export interface SubmitPromptFormState {
@@ -59,49 +58,29 @@ export async function submitPromptAction(
   const { promptText } = validatedFields.data;
 
   try {
-    const categorizationResult = await categorizeImagePrompts({ prompt: promptText });
-    
-    let category = categorizationResult.category.toLowerCase() as PromptCategory;
-    
-    const allowedCategories: PromptCategory[] = [
-      'art styles',
-      'scenes and themes',
-      'animals and characters',
-      'storytelling and comics',
-      'history and nostalgia',
-      'product and advertising',
-      'fantasy concepts and technical details',
-      'crafting prompts', // Ensure 'crafting prompts' is here if AI can categorize it. Or handle crafted prompts differently.
-      'other'
-    ];
-    if (!allowedCategories.includes(category)) {
-      category = 'other';
-    }
+    // AI Categorization logic removed
+    const category: PromptCategory = 'other'; // Default category
 
     const newPrompt: Prompt = {
       id: Date.now().toString(), 
       text: promptText,
-      // For crafted prompts, the category might often be 'other' or reflect the content.
-      // The 'crafting prompts' category itself is more about *examples of how to craft*.
-      // Submitted crafted prompts will be categorized based on their content by the AI.
       category: category, 
-      description: `AI classified (Confidence: ${categorizationResult.confidence.toFixed(2)})`,
+      description: 'Prompt submitted manually.', // Generic description or remove
       icon: categoryIconsMap[category] || Shapes,
       createdAt: new Date(),
     };
 
     return {
-      message: 'Prompt submitted and categorized successfully!',
+      message: 'Prompt submitted successfully! (Manual categorization)',
       success: true,
       newPrompt,
     };
   } catch (error) {
-    console.error('Error categorizing prompt:', error);
+    console.error('Error processing prompt:', error);
     const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
     return {
-      message: `Failed to categorize prompt: ${errorMessage}. Please try again.`,
+      message: `Failed to process prompt: ${errorMessage}. Please try again.`,
       success: false,
     };
   }
 }
-

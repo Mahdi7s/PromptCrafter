@@ -1,115 +1,51 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
-import { PromptCard } from '@/components/prompts/prompt-card';
-import { CategoryFilter } from '@/components/prompts/category-filter';
-import { SubmitPromptDialog } from '@/components/prompts/submit-prompt-dialog';
-import { CraftPromptDialog } from '@/components/prompts/craft-prompt-dialog'; // Added
-import { initialPrompts } from '@/config/prompts';
-import type { Prompt, PromptCategory } from '@/types';
-import { PromptCategoriesList } from '@/types';
-import { Button } from '@/components/ui/button';
-import { ArrowUp } from 'lucide-react';
+import { CraftPromptForm } from '@/components/prompts/craft-prompt-form';
+import type { Prompt } from '@/types';
+import { addCraftedPromptToList } from '@/config/prompts'; // Used to update a global list if needed elsewhere
 
 export default function HomePage() {
-  const [prompts, setPrompts] = useState<Prompt[]>(initialPrompts);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<PromptCategory | 'all'>('all');
-  const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
-  const [isCraftDialogOpen, setIsCraftDialogOpen] = useState(false); // Added state for craft dialog
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const checkScrollTop = () => {
-      if (!showScrollTop && window.pageYOffset > 400) {
-        setShowScrollTop(true);
-      } else if (showScrollTop && window.pageYOffset <= 400) {
-        setShowScrollTop(false);
-      }
-    };
-    window.addEventListener('scroll', checkScrollTop);
-    return () => window.removeEventListener('scroll', checkScrollTop);
-  }, [showScrollTop]);
-
-  const scrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // This function will be called by CraftPromptForm on successful submission.
+  // Currently, it updates a shared list (initialPrompts) and could trigger UI updates
+  // if a prompt list view were present or re-introduced on another page.
+  const handleNewCraftedPrompt = (newPrompt: Prompt) => {
+    addCraftedPromptToList(newPrompt);
+    // If you want to display submitted prompts on a different page,
+    // you might navigate or fetch updated list there.
+    // For now, the toast in CraftPromptForm gives user feedback.
   };
-
-
-  const handleAddNewPrompt = (newPrompt: Prompt) => {
-    setPrompts(prevPrompts => [newPrompt, ...prevPrompts].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
-  };
-
-  const filteredPrompts = useMemo(() => {
-    return prompts
-      .filter(prompt =>
-        selectedCategory === 'all' ? true : prompt.category === selectedCategory
-      )
-      .filter(prompt =>
-        prompt.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        prompt.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (prompt.description && prompt.description.toLowerCase().includes(searchTerm.toLowerCase()))
-      ).sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }, [prompts, searchTerm, selectedCategory]);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onSubmitPromptClick={() => setIsSubmitDialogOpen(true)}
-        onCraftPromptClick={() => setIsCraftDialogOpen(true)} // Passed handler
-      />
-      <main className="flex-1">
-        <div className="container py-8 px-4 md:px-6">
-          <CategoryFilter
-            categories={PromptCategoriesList}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-          />
-          {filteredPrompts.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredPrompts.map(prompt => (
-                <PromptCard key={prompt.id} prompt={prompt} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <img src="https://placehold.co/300x200.png" data-ai-hint="empty state search" alt="No prompts found" className="mx-auto mb-6 rounded-lg shadow-md" />
-              <h2 className="text-2xl font-headline text-muted-foreground mb-2">No Prompts Found</h2>
-              <p className="text-muted-foreground">
-                Try adjusting your search or filters, or submit a new prompt!
-              </p>
-            </div>
-          )}
+    <div className="flex min-h-screen flex-col bg-background">
+      <Header />
+      <main className="flex-1 container py-8 px-4 md:px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-8 text-center">
+            <h1 className="text-4xl font-headline font-bold text-primary mb-2">
+              AI Prompt Engineer
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Craft the perfect prompt for your image and video creations.
+              Select options below or type freely to generate and refine your ideas.
+            </p>
+          </div>
+          <div className="p-6 sm:p-8 bg-card shadow-xl rounded-lg border">
+             <CraftPromptForm 
+                onFormSubmissionSuccess={handleNewCraftedPrompt}
+                // closeDialog is not strictly needed here as it's not in a dialog,
+                // but the form might use it to reset itself.
+                // We can pass a simple reset function or let the form handle its own reset.
+                closeDialog={() => { /* Form reset is handled internally or via form's own logic */ }}
+             />
+          </div>
         </div>
       </main>
-      <footer className="py-6 text-center text-sm text-muted-foreground border-t">
+      <footer className="py-6 text-center text-sm text-muted-foreground border-t mt-12">
         <p>&copy; {new Date().getFullYear()} AIPromptoImage. All rights reserved.</p>
-        <p className="mt-1">Designed for creative image transformations.</p>
+        <p className="mt-1">Engineered for creative image and video transformations.</p>
       </footer>
-      <SubmitPromptDialog
-        isOpen={isSubmitDialogOpen}
-        onOpenChange={setIsSubmitDialogOpen}
-        onFormSubmissionSuccess={handleAddNewPrompt}
-      />
-      <CraftPromptDialog 
-        isOpen={isCraftDialogOpen}
-        onOpenChange={setIsCraftDialogOpen}
-        onFormSubmissionSuccess={handleAddNewPrompt}
-      />
-      {showScrollTop && (
-        <Button
-          onClick={scrollTop}
-          className="fixed bottom-8 right-8 h-12 w-12 rounded-full p-0 shadow-lg"
-          variant="default"
-          aria-label="Scroll to top"
-        >
-          <ArrowUp className="h-6 w-6" />
-        </Button>
-      )}
     </div>
   );
 }

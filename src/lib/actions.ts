@@ -12,14 +12,13 @@ import {
   Camera, 
   ShoppingBag, 
   Wand2, 
-  ClipboardList,
-  Lightbulb, // Icon for Crafting Prompts
+  Lightbulb, 
   Shapes 
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const SubmitPromptSchema = z.object({
-  promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(1000, { message: 'Prompt must be at most 1000 characters long.' }),
+  promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(2000, { message: 'Prompt must be at most 2000 characters long.' }), // Increased max length for detailed prompts
 });
 
 export interface SubmitPromptFormState {
@@ -37,7 +36,6 @@ const categoryIconsMap: Record<PromptCategory, LucideIcon> = {
   'history and nostalgia': Camera,
   'product and advertising': ShoppingBag,
   'fantasy concepts and technical details': Wand2,
-  'prompt templates': ClipboardList,
   'crafting prompts': Lightbulb,
   'other': Shapes,
 };
@@ -73,8 +71,7 @@ export async function submitPromptAction(
       'history and nostalgia',
       'product and advertising',
       'fantasy concepts and technical details',
-      'prompt templates',
-      'crafting prompts',
+      'crafting prompts', // Ensure 'crafting prompts' is here if AI can categorize it. Or handle crafted prompts differently.
       'other'
     ];
     if (!allowedCategories.includes(category)) {
@@ -84,7 +81,10 @@ export async function submitPromptAction(
     const newPrompt: Prompt = {
       id: Date.now().toString(), 
       text: promptText,
-      category: category,
+      // For crafted prompts, the category might often be 'other' or reflect the content.
+      // The 'crafting prompts' category itself is more about *examples of how to craft*.
+      // Submitted crafted prompts will be categorized based on their content by the AI.
+      category: category, 
       description: `AI classified (Confidence: ${categorizationResult.confidence.toFixed(2)})`,
       icon: categoryIconsMap[category] || Shapes,
       createdAt: new Date(),
@@ -104,3 +104,4 @@ export async function submitPromptAction(
     };
   }
 }
+

@@ -10,9 +10,8 @@ import {
   Camera, 
   ShoppingBag, 
   Wand2, 
-  ClipboardList, 
-  Lightbulb, // Icon for Crafting Prompts
-  Shapes, // For 'other'
+  Lightbulb,
+  Shapes, 
   ListFilter 
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -31,7 +30,6 @@ const categoryIcons: Record<PromptCategory, LucideIcon> = {
   'history and nostalgia': Camera,
   'product and advertising': ShoppingBag,
   'fantasy concepts and technical details': Wand2,
-  'prompt templates': ClipboardList,
   'crafting prompts': Lightbulb,
   'other': Shapes,
 };
@@ -52,7 +50,7 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
         All
       </Button>
       {categories.map((category) => {
-        const IconComponent = categoryIcons[category] || Shapes; // Fallback to Shapes icon
+        const IconComponent = categoryIcons[category] || Shapes;
         return (
           <Button
             key={category}

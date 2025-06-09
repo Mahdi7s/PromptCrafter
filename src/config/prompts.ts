@@ -8,8 +8,7 @@ import {
   Camera, 
   ShoppingBag, 
   Wand2, 
-  ClipboardList,
-  Lightbulb, // Icon for Crafting Prompts
+  Lightbulb, 
   Shapes 
 } from 'lucide-react';
 
@@ -82,14 +81,6 @@ const userPromptsData = {
       ]
     },
     {
-      "category": "Prompt Templates",
-      "icon": ClipboardList,
-      "examples": [
-        "Template: Create a [scene/subject, e.g., bustling medieval marketplace] in [art style, e.g., detailed oil painting reminiscent of Pieter Bruegel] with [specific details: lighting (e.g., overcast sky, late afternoon), color palette (e.g., muted earth tones with occasional bright accents), background (e.g., half-timbered houses and a distant castle), key elements (e.g., merchants haggling, children playing, livestock)].",
-        "Template for Character Design: Design a [adjective, e.g., grizzled] [character type, e.g., space pirate captain] in a [setting, e.g., dimly lit starship bridge]. Art Style: [e.g., gritty photorealism]. Key Features: [e.g., cybernetic eye, scarred face, worn leather coat]. Lighting: [e.g., harsh, from console screens]. Mood: [e.g., commanding, dangerous]."
-      ]
-    },
-    {
       "category": "Crafting Prompts",
       "icon": Lightbulb,
       "examples": [
@@ -102,7 +93,7 @@ const userPromptsData = {
   ]
 };
 
-export const initialPrompts: Prompt[] = [];
+export let initialPrompts: Prompt[] = []; // Made mutable for potential future use if list is re-introduced
 let idCounter = 1;
 const baseDate = new Date();
 
@@ -114,7 +105,13 @@ userPromptsData.ImagePrompts.forEach(categoryData => {
       text: exampleText,
       category: categoryName,
       icon: categoryData.icon,
-      createdAt: new Date(baseDate.getTime() - idCounter * 1000 * 60 * 60), // Stagger createdAt more for distinct sorting
+      createdAt: new Date(baseDate.getTime() - idCounter * 1000 * 60 * 60),
     });
   });
 });
+
+// Function to add a new prompt to the initialPrompts array (e.g., after submission)
+// This might be used if a prompt list view is added later.
+export const addCraftedPromptToList = (newPrompt: Prompt) => {
+  initialPrompts = [newPrompt, ...initialPrompts].sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
+};

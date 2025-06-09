@@ -9,7 +9,6 @@ export type PromptCategory =
   | 'history and nostalgia'
   | 'product and advertising'
   | 'fantasy concepts and technical details'
-  | 'prompt templates'
   | 'crafting prompts'
   | 'other';
 
@@ -30,7 +29,7 @@ export const PromptCategoriesList: PromptCategory[] = [
   'history and nostalgia',
   'product and advertising',
   'fantasy concepts and technical details',
-  'prompt templates',
   'crafting prompts',
   'other',
 ];
+

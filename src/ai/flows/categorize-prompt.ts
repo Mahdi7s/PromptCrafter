@@ -13,7 +13,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const CategorizeImagePromptsInputSchema = z.object({
-  prompt: z.string().describe('The image transformation or editing prompt to categorize.'),
+  prompt: z.string().describe('The image or video transformation or editing prompt to categorize.'),
 });
 export type CategorizeImagePromptsInput = z.infer<typeof CategorizeImagePromptsInputSchema>;
 
@@ -21,7 +21,7 @@ const CategorizeImagePromptsOutputSchema = z.object({
   category: z
     .string()
     .describe(
-      'The category of the image prompt. Options include: art styles, scenes and themes, animals and characters, storytelling and comics, history and nostalgia, product and advertising, fantasy concepts and technical details, prompt templates, crafting prompts, other.'
+      'The category of the prompt. Options include: art styles, scenes and themes, animals and characters, storytelling and comics, history and nostalgia, product and advertising, fantasy concepts and technical details, crafting prompts, other. Video prompts may fall into existing categories based on content or "other".'
     ),
   confidence: z.number().describe('The confidence level (0-1) of the categorization.'),
 });
@@ -35,9 +35,10 @@ const categorizeImagePromptsPrompt = ai.definePrompt({
   name: 'categorizeImagePromptsPrompt',
   input: {schema: CategorizeImagePromptsInputSchema},
   output: {schema: CategorizeImagePromptsOutputSchema},
-  prompt: `You are an AI assistant specializing in categorizing image transformation and editing prompts.  
+  prompt: `You are an AI assistant specializing in categorizing image and video transformation/editing prompts.  
   Given the prompt, determine the most relevant category and a confidence level (0-1).
-  Categories include: art styles, scenes and themes, animals and characters, storytelling and comics, history and nostalgia, product and advertising, fantasy concepts and technical details, prompt templates, crafting prompts, other.
+  Categories include: art styles, scenes and themes, animals and characters, storytelling and comics, history and nostalgia, product and advertising, fantasy concepts and technical details, crafting prompts, other.
+  If the prompt describes a video, categorize it based on its primary subject matter or theme using the available categories. For example, a video of a cyberpunk city would be 'scenes and themes' or 'art styles'. If no specific category fits well, use 'other'.
   Ensure the category you output is one of these exact options, in lowercase.
 
   Prompt: {{{prompt}}}
@@ -52,10 +53,9 @@ const categorizeImagePromptsFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await categorizeImagePromptsPrompt(input);
-    // Ensure the category is lowercase and one of the predefined valid categories.
     if (output) {
         const lowerCategory = output.category.toLowerCase();
-        const validCategories = ['art styles', 'scenes and themes', 'animals and characters', 'storytelling and comics', 'history and nostalgia', 'product and advertising', 'fantasy concepts and technical details', 'prompt templates', 'crafting prompts', 'other'];
+        const validCategories = ['art styles', 'scenes and themes', 'animals and characters', 'storytelling and comics', 'history and nostalgia', 'product and advertising', 'fantasy concepts and technical details', 'crafting prompts', 'other'];
         if (validCategories.includes(lowerCategory)) {
             output.category = lowerCategory;
         } else {
@@ -65,3 +65,4 @@ const categorizeImagePromptsFlow = ai.defineFlow(
     return output!;
   }
 );
+

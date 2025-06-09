@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -11,13 +12,14 @@ import {
   Camera, 
   ShoppingBag, 
   Wand2, 
-  ClipboardList, 
+  ClipboardList,
+  Lightbulb, // Icon for Crafting Prompts
   Shapes 
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const SubmitPromptSchema = z.object({
-  promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(500, { message: 'Prompt must be at most 500 characters long.' }),
+  promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(1000, { message: 'Prompt must be at most 1000 characters long.' }),
 });
 
 export interface SubmitPromptFormState {
@@ -36,6 +38,7 @@ const categoryIconsMap: Record<PromptCategory, LucideIcon> = {
   'product and advertising': ShoppingBag,
   'fantasy concepts and technical details': Wand2,
   'prompt templates': ClipboardList,
+  'crafting prompts': Lightbulb,
   'other': Shapes,
 };
 
@@ -71,6 +74,7 @@ export async function submitPromptAction(
       'product and advertising',
       'fantasy concepts and technical details',
       'prompt templates',
+      'crafting prompts',
       'other'
     ];
     if (!allowedCategories.includes(category)) {
@@ -93,7 +97,6 @@ export async function submitPromptAction(
     };
   } catch (error) {
     console.error('Error categorizing prompt:', error);
-    // Check if error is an object and has a message property
     const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
     return {
       message: `Failed to categorize prompt: ${errorMessage}. Please try again.`,

@@ -1,3 +1,4 @@
+
 import type { PromptCategory } from '@/types';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ import {
   ShoppingBag, 
   Wand2, 
   ClipboardList, 
+  Lightbulb, // Icon for Crafting Prompts
   Shapes, // For 'other'
   ListFilter 
 } from 'lucide-react';
@@ -30,6 +32,7 @@ const categoryIcons: Record<PromptCategory, LucideIcon> = {
   'product and advertising': ShoppingBag,
   'fantasy concepts and technical details': Wand2,
   'prompt templates': ClipboardList,
+  'crafting prompts': Lightbulb,
   'other': Shapes,
 };
 

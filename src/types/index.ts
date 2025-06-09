@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from 'lucide-react';
 
 export type PromptCategory =
@@ -9,6 +10,7 @@ export type PromptCategory =
   | 'product and advertising'
   | 'fantasy concepts and technical details'
   | 'prompt templates'
+  | 'crafting prompts'
   | 'other';
 
 export interface Prompt {
@@ -29,5 +31,6 @@ export const PromptCategoriesList: PromptCategory[] = [
   'product and advertising',
   'fantasy concepts and technical details',
   'prompt templates',
+  'crafting prompts',
   'other',
 ];

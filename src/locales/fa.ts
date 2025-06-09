@@ -1,0 +1,58 @@
+
+import type { LocaleMessages } from '@/types';
+
+// These are placeholder translations. Replace with actual Persian.
+const faMessages: LocaleMessages = {
+  headerTitle: "FA: AIPromptoImage",
+  homePageTitle: "FA: AI Prompt Engineer",
+  homePageSubtitle: "FA: Craft the perfect prompt for your image and video creations. Select options below or type freely to generate and refine your ideas.",
+  craftPromptForm: {
+    imagePromptButton: "FA: Image Prompt",
+    videoPromptButton: "FA: Video Prompt",
+    imageOptionsTitle: "FA: Image Options",
+    subjectLabel: "FA: Subject / Scene",
+    subjectPlaceholder: "FA: Select subject",
+    artStyleLabel: "FA: Art Style",
+    artStylePlaceholder: "FA: Select art style",
+    lightingLabel: "FA: Lighting",
+    lightingPlaceholder: "FA: Select lighting",
+    compositionLabel: "FA: Composition",
+    compositionPlaceholder: "FA: Select composition",
+    moodLabel: "FA: Mood/Atmosphere",
+    moodPlaceholder: "FA: Select mood",
+    videoSpecificsTitle: "FA: Video Specifics",
+    videoSubjectLabel: "FA: Main Subject / Action for Video",
+    videoSubjectPlaceholder: "FA: e.g., 'A cat chasing a laser pointer'",
+    aspectRatioLabel: "FA: Aspect Ratio",
+    aspectRatioPlaceholder: "FA: Select aspect ratio",
+    videoDurationLabel: "FA: Video Duration",
+    videoDurationPlaceholder: "FA: Select duration",
+    cameraMotionLabel: "FA: Camera Motion",
+    cameraMotionPlaceholder: "FA: Select camera motion",
+    videoStyleLabel: "FA: Video Style",
+    videoStylePlaceholder: "FA: Select video style",
+    videoStyleHint: "FA: You can still use Art Style, Lighting, Composition and Mood options from the Image section below to further refine your video prompt if desired.",
+    additionalVisualDetailsVideoTitle: "FA: Additional Visual Details (for Video)",
+    artStyleVideoLabel: "FA: Art Style (Optional)",
+    lightingVideoLabel: "FA: Lighting (Optional)",
+    moodVideoLabel: "FA: Mood/Atmosphere (Optional)",
+    extraDetailsLabel: "FA: Extra Details / Custom Input",
+    extraDetailsPlaceholder: "FA: e.g., 'wearing a red cloak', 'vibrant colors'",
+    generatedPromptPreviewLabel: "FA: Generated Prompt Preview",
+    generatedPromptPlaceholder: "FA: Your engineered prompt will appear here...",
+    copyPromptButton: "FA: Copy Prompt",
+    copiedButton: "FA: Copied!",
+    resetCrafterButton: "FA: Reset Crafter",
+    submitButton: "FA: Generate & Submit Prompt",
+    submittingButton: "FA: Submitting...",
+    emptyPromptErrorTitle: "FA: Empty Prompt",
+    emptyPromptErrorDescription: "FA: Please select options or add details to generate a prompt before submitting."
+  },
+  footerCopyright: "FA: © {year} AIPromptoImage.",
+  footerReserved: "FA: All rights reserved.",
+  footerSlogan: "FA: Engineered for creative image and video transformations.",
+  languageEnglish: "English (انگلیسی)",
+  languagePersian: "فارسی",
+};
+
+export default faMessages;

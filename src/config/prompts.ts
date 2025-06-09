@@ -1,3 +1,4 @@
+
 import type { Prompt } from '@/types';
 import { Palette, SquarePen, ImageUp, Sparkles, Wand2, Shapes } from 'lucide-react';
 
@@ -66,4 +67,29 @@ export const initialPrompts: Prompt[] = [
     icon: Shapes,
     createdAt: new Date('2024-01-22T17:30:00Z')
   },
+  {
+    id: '9',
+    text: 'Increase the resolution and detail of this old family photograph.',
+    category: 'enhancement',
+    description: 'Upscales and refines low-resolution or aged images.',
+    icon: Sparkles,
+    createdAt: new Date('2024-01-23T10:10:00Z')
+  },
+  {
+    id: '10',
+    text: 'Place this product on a clean, minimalist white background.',
+    category: 'background change',
+    description: 'Isolates an object and sets it against a neutral backdrop.',
+    icon: ImageUp,
+    createdAt: new Date('2024-01-24T11:45:00Z')
+  },
+  {
+    id: '11',
+    text: 'Render this scene as a watercolor painting with soft edges.',
+    category: 'artistic effects',
+    description: 'Simulates a specific artistic medium and technique.',
+    icon: Wand2,
+    createdAt: new Date('2024-01-25T15:05:00Z')
+  },
 ];
+

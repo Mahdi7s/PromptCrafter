@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -5,6 +6,7 @@ import { Header } from '@/components/layout/header';
 import { PromptCard } from '@/components/prompts/prompt-card';
 import { CategoryFilter } from '@/components/prompts/category-filter';
 import { SubmitPromptDialog } from '@/components/prompts/submit-prompt-dialog';
+import { CraftPromptDialog } from '@/components/prompts/craft-prompt-dialog'; // Added
 import { initialPrompts } from '@/config/prompts';
 import type { Prompt, PromptCategory } from '@/types';
 import { PromptCategoriesList } from '@/types';
@@ -16,6 +18,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<PromptCategory | 'all'>('all');
   const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
+  const [isCraftDialogOpen, setIsCraftDialogOpen] = useState(false); // Added state for craft dialog
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -57,6 +60,7 @@ export default function HomePage() {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onSubmitPromptClick={() => setIsSubmitDialogOpen(true)}
+        onCraftPromptClick={() => setIsCraftDialogOpen(true)} // Passed handler
       />
       <main className="flex-1">
         <div className="container py-8 px-4 md:px-6">
@@ -89,6 +93,11 @@ export default function HomePage() {
       <SubmitPromptDialog
         isOpen={isSubmitDialogOpen}
         onOpenChange={setIsSubmitDialogOpen}
+        onFormSubmissionSuccess={handleAddNewPrompt}
+      />
+      <CraftPromptDialog 
+        isOpen={isCraftDialogOpen}
+        onOpenChange={setIsCraftDialogOpen}
         onFormSubmissionSuccess={handleAddNewPrompt}
       />
       {showScrollTop && (

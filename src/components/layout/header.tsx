@@ -1,14 +1,16 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Search } from "lucide-react";
+import { PlusCircle, Search, Sparkles } from "lucide-react"; // Added Sparkles for Craft Prompt
 
 interface HeaderProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
   onSubmitPromptClick: () => void;
+  onCraftPromptClick: () => void; // Added prop for craft prompt
 }
 
-export function Header({ searchTerm, onSearchChange, onSubmitPromptClick }: HeaderProps) {
+export function Header({ searchTerm, onSearchChange, onSubmitPromptClick, onCraftPromptClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-10 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -24,7 +26,7 @@ export function Header({ searchTerm, onSearchChange, onSubmitPromptClick }: Head
             </span>
           </a>
         </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+        <div className="flex flex-1 items-center justify-end space-x-2">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -37,6 +39,10 @@ export function Header({ searchTerm, onSearchChange, onSubmitPromptClick }: Head
               />
             </div>
           </div>
+          <Button onClick={onCraftPromptClick} variant="outline" className="shadow-md hover:shadow-lg transition-shadow duration-300">
+            <Sparkles className="mr-2 h-5 w-5" />
+            Craft Prompt
+          </Button>
           <Button onClick={onSubmitPromptClick} className="shadow-md hover:shadow-lg transition-shadow duration-300">
             <PlusCircle className="mr-2 h-5 w-5" />
             Submit Prompt

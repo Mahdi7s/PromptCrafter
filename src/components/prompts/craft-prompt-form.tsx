@@ -2,21 +2,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+// import { useFormState, useFormStatus } from 'react-dom'; // No longer needed
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { submitPromptAction, type SubmitPromptFormState } from '@/lib/actions';
+// import { submitPromptAction, type SubmitPromptFormState } from '@/lib/actions'; // No longer needed
 import { useToast } from '@/hooks/use-toast';
 import type { Prompt } from '@/types';
-import { Copy, Send, Eraser, Check, Film, Ratio, Timer, Orbit } from 'lucide-react';
+import { Copy, Eraser, Check, Film, Ratio, Timer, Orbit } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface CraftPromptFormProps {
-  onFormSubmissionSuccess: (newPrompt: Prompt) => void;
-  closeDialog: () => void; 
+  onFormSubmissionSuccess: (newPrompt: Prompt) => void; // Prop remains but won't be called from here
+  closeDialog: () => void;
 }
 
 interface SelectOption {
@@ -141,21 +141,6 @@ const videoStyleOptions: SelectOption[] = [
 ];
 
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  const { t } = useTranslation();
-  return (
-    <Button type="submit" disabled={pending} className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 bg-primary hover:bg-primary/90 text-primary-foreground">
-      {pending ? (
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground me-2 rtl:ms-2"></div>
-      ) : (
-        <Send className="h-4 w-4 me-2 rtl:ms-2" />
-      )}
-      {pending ? t('craftPromptForm.submittingButton') : t('craftPromptForm.submitButton')}
-    </Button>
-  );
-}
-
 export function CraftPromptForm({ onFormSubmissionSuccess, closeDialog }: CraftPromptFormProps) {
   const { t } = useTranslation();
   // Image states
@@ -177,9 +162,6 @@ export function CraftPromptForm({ onFormSubmissionSuccess, closeDialog }: CraftP
   const [copied, setCopied] = useState(false);
 
   const { toast } = useToast();
-
-  const initialState: SubmitPromptFormState = { message: '', success: false };
-  const [state, formAction] = useFormState(submitPromptAction, initialState);
   
   useEffect(() => {
     const imageParts = [
@@ -212,28 +194,6 @@ export function CraftPromptForm({ onFormSubmissionSuccess, closeDialog }: CraftP
     setGeneratedPrompt(fullPrompt.trim() ? fullPrompt.charAt(0).toUpperCase() + fullPrompt.slice(1) + '.' : '');
   }, [subject, artStyle, lighting, composition, mood, extraDetails, isVideoPrompt, aspectRatio, videoDuration, cameraMotion, videoStyle]);
 
-  useEffect(() => {
-    if (state.message) {
-      if (state.success) {
-        toast({
-          title: t('craftPromptForm.copiedButton'), 
-          description: state.message, 
-          className: 'bg-green-100 border-green-300 text-green-700 dark:bg-green-900 dark:border-green-700 dark:text-green-200'
-        });
-        if (state.newPrompt) {
-          onFormSubmissionSuccess(state.newPrompt);
-        }
-        resetForm();
-      } else {
-        toast({
-          title: t('craftPromptForm.emptyPromptErrorTitle'), 
-          description: state.message || 'Something went wrong.',
-          variant: 'destructive',
-        });
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, toast, onFormSubmissionSuccess]); // t was removed as it causes re-renders on lang change for toast
 
   const handleCopy = () => {
     if (!generatedPrompt) return;
@@ -261,21 +221,8 @@ export function CraftPromptForm({ onFormSubmissionSuccess, closeDialog }: CraftP
     setGeneratedPrompt('');
   };
 
-  const handleSubmitWithCraftedPrompt = (formData: FormData) => {
-    if (!generatedPrompt) {
-        toast({
-          title: t('craftPromptForm.emptyPromptErrorTitle'),
-          description: t('craftPromptForm.emptyPromptErrorDescription'),
-          variant: 'destructive',
-        });
-        return;
-    }
-    formData.set('promptText', generatedPrompt);
-    formAction(formData);
-  };
-
   return (
-    <form action={handleSubmitWithCraftedPrompt} className="space-y-6">
+    <form className="space-y-6">
       
       <div className="flex items-center space-x-2 rtl:space-x-reverse mb-6">
         <Button type="button" variant={!isVideoPrompt ? "default" : "outline"} onClick={() => setIsVideoPrompt(false)} className="flex-1 shadow-sm">{t('craftPromptForm.imagePromptButton')}</Button>
@@ -457,12 +404,7 @@ export function CraftPromptForm({ onFormSubmissionSuccess, closeDialog }: CraftP
           {t('craftPromptForm.resetCrafterButton')}
         </Button>
       </div>
-      <SubmitButton />
-        {state.fields?.promptText && !generatedPrompt && ( 
-          <p id="promptText-error" className="text-xs text-destructive mt-1">
-            {t('craftPromptForm.emptyPromptErrorDescription')}
-          </p>
-        )}
     </form>
   );
 }
+

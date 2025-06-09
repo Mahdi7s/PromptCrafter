@@ -1,0 +1,45 @@
+
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: Debug App",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (https?://.+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Next.js: Attach to Node",
+      "type": "node",
+      "request": "attach",
+      "port": 9229, // Default Node.js debug port
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Next.js: Debug Client-side",
+      "type": "chrome", // Or "msedge" if you prefer Edge
+      "request": "launch",
+      "url": "http://localhost:9002", // Your app's URL
+      "webRoot": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Next.js: Full Stack Debug",
+      "configurations": ["Next.js: Debug App", "Next.js: Debug Client-side"]
+      // Note: For a true full-stack debug experience where breakpoints hit seamlessly
+      // in both server and client, you might need to run `npm run dev` with NODE_OPTIONS='--inspect'
+      // and then use the "Next.js: Attach to Node" configuration.
+      // The "Next.js: Debug App" will handle server-side.
+    }
+  ]
+}

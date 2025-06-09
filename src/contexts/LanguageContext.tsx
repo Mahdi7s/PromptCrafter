@@ -3,7 +3,7 @@
 
 import type { ReactNode, Dispatch, SetStateAction } from 'react';
 import { createContext, useContext, useState, useEffect } from 'react';
-import type { SupportedLanguage, Translations, LocaleMessages } from '@/types';
+import type { SupportedLanguage, LocaleMessages } from '@/types';
 import enMessages from '@/locales/en';
 import faMessages from '@/locales/fa';
 
@@ -20,32 +20,49 @@ const messages: Record<SupportedLanguage, LocaleMessages> = {
   fa: faMessages,
 };
 
+// Helper function to safely get the initial language from localStorage
+const getInitialStoredLanguage = (): SupportedLanguage => {
+  if (typeof window === 'undefined') {
+    return 'en'; // Default for SSR or pre-client rendering
+  }
+  const storedLang = localStorage.getItem('aipromptoimage_lang') as SupportedLanguage | null;
+  if (storedLang && (storedLang === 'en' || storedLang === 'fa')) {
+    return storedLang;
+  }
+  // If no valid language is stored, default to English and save it.
+  localStorage.setItem('aipromptoimage_lang', 'en');
+  return 'en';
+};
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<SupportedLanguage>('en');
-  const [currentTranslations, setCurrentTranslations] = useState<LocaleMessages>(messages.en);
+  // Initialize language state directly using the helper
+  const [language, setLanguage] = useState<SupportedLanguage>(getInitialStoredLanguage);
+  
+  // Initialize translations based on this initial language
+  const [currentTranslations, setCurrentTranslations] = useState<LocaleMessages>(() => messages[getInitialStoredLanguage()]);
 
-  useEffect(() => {
-    const storedLang = localStorage.getItem('aipromptoimage_lang') as SupportedLanguage | null;
-    if (storedLang && (storedLang === 'en' || storedLang === 'fa')) {
-      setLanguage(storedLang);
-      setCurrentTranslations(messages[storedLang]);
-      document.documentElement.lang = storedLang;
-      document.documentElement.dir = storedLang === 'fa' ? 'rtl' : 'ltr';
-    } else {
-      // Default to English if no valid language is stored or if it's the first visit
-      localStorage.setItem('aipromptoimage_lang', 'en');
-      document.documentElement.lang = 'en';
-      document.documentElement.dir = 'ltr';
-      setCurrentTranslations(messages.en);
-    }
-  }, []);
-
+  // This effect runs when the 'language' state changes (e.g., user selects a new language)
   useEffect(() => {
     localStorage.setItem('aipromptoimage_lang', language);
     setCurrentTranslations(messages[language]);
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
   }, [language]);
+
+  // This effect runs once on mount to ensure document attributes are correctly set
+  // after hydration, matching the initial language. This is mostly a safeguard.
+  useEffect(() => {
+    const initialLang = getInitialStoredLanguage();
+    document.documentElement.lang = initialLang;
+    document.documentElement.dir = initialLang === 'fa' ? 'rtl' : 'ltr';
+    // If the language state somehow diverged from localStorage by the time this effect runs
+    // (e.g. localStorage changed in another tab before this component hydrated fully), resync.
+    if (language !== initialLang) {
+        setLanguage(initialLang);
+        // The above setLanguage will trigger the other useEffect to update currentTranslations
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array ensures this runs once on mount
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, translations: currentTranslations }}>

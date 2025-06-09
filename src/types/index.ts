@@ -9,6 +9,7 @@ export type PromptCategory =
   | 'history and nostalgia'
   | 'product and advertising'
   | 'fantasy concepts and technical details'
+  | 'crafting prompts'
   | 'other';
 
 export interface Prompt {
@@ -28,6 +29,7 @@ export const PromptCategoriesList: PromptCategory[] = [
   'history and nostalgia',
   'product and advertising',
   'fantasy concepts and technical details',
+  'crafting prompts',
   'other',
 ];
 
@@ -35,6 +37,18 @@ export type SupportedLanguage = 'en' | 'fa';
 
 export interface Translations {
   [key: string]: string | Translations;
+}
+
+interface CraftPromptFormSelectOptions {
+  subjects: Record<string, string>;
+  artStyles: Record<string, string>;
+  lightingOptions: Record<string, string>;
+  compositionOptions: Record<string, string>;
+  moodOptions: Record<string, string>;
+  aspectRatioOptions: Record<string, string>;
+  videoDurationOptions: Record<string, string>;
+  cameraMotionOptions: Record<string, string>;
+  videoStyleOptions: Record<string, string>;
 }
 
 export interface LocaleMessages {
@@ -82,6 +96,7 @@ export interface LocaleMessages {
     submittingButton: string;
     emptyPromptErrorTitle: string;
     emptyPromptErrorDescription: string;
+    selectOptions: CraftPromptFormSelectOptions;
   };
   footerCopyright: string;
   footerReserved: string;

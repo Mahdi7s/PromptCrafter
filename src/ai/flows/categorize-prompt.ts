@@ -1,4 +1,4 @@
-// 'use server'
+
 'use server';
 
 /**
@@ -21,7 +21,7 @@ const CategorizeImagePromptsOutputSchema = z.object({
   category: z
     .string()
     .describe(
-      'The category of the image prompt. Options include: style transfer, object manipulation, background change, enhancement, artistic effects, and other.'
+      'The category of the image prompt. Options include: art styles, scenes and themes, animals and characters, storytelling and comics, history and nostalgia, product and advertising, fantasy concepts and technical details, prompt templates, other.'
     ),
   confidence: z.number().describe('The confidence level (0-1) of the categorization.'),
 });
@@ -37,8 +37,8 @@ const categorizeImagePromptsPrompt = ai.definePrompt({
   output: {schema: CategorizeImagePromptsOutputSchema},
   prompt: `You are an AI assistant specializing in categorizing image transformation and editing prompts.  
   Given the prompt, determine the most relevant category and a confidence level (0-1).
-  Categories include: style transfer, object manipulation, background change, enhancement, artistic effects, other. 
-  Ensure the category is one of the listed options.
+  Categories include: art styles, scenes and themes, animals and characters, storytelling and comics, history and nostalgia, product and advertising, fantasy concepts and technical details, prompt templates, other.
+  Ensure the category you output is one of these exact options, in lowercase.
 
   Prompt: {{{prompt}}}
   Category:`,
@@ -52,6 +52,18 @@ const categorizeImagePromptsFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await categorizeImagePromptsPrompt(input);
+    // Ensure the category is lowercase and one of the predefined valid categories.
+    if (output) {
+        const lowerCategory = output.category.toLowerCase();
+        const validCategories = ['art styles', 'scenes and themes', 'animals and characters', 'storytelling and comics', 'history and nostalgia', 'product and advertising', 'fantasy concepts and technical details', 'prompt templates', 'other'];
+        if (validCategories.includes(lowerCategory)) {
+            output.category = lowerCategory;
+        } else {
+            // If the AI returns a category not in the list, default to 'other'
+            // This could also be an opportunity to log unexpected AI output.
+            output.category = 'other';
+        }
+    }
     return output!;
   }
 );

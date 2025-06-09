@@ -3,7 +3,18 @@
 import { z } from 'zod';
 import { categorizeImagePrompts } from '@/ai/flows/categorize-prompt';
 import type { Prompt, PromptCategory } from '@/types';
-import { Palette, SquarePen, ImageUp, Sparkles, Wand2, Shapes } from 'lucide-react';
+import { 
+  Palette, 
+  Landmark, 
+  PawPrint, 
+  BookOpenText, 
+  Camera, 
+  ShoppingBag, 
+  Wand2, 
+  ClipboardList, 
+  Shapes 
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 const SubmitPromptSchema = z.object({
   promptText: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(500, { message: 'Prompt must be at most 500 characters long.' }),
@@ -16,13 +27,16 @@ export interface SubmitPromptFormState {
   newPrompt?: Prompt;
 }
 
-const categoryIconsMap: Record<PromptCategory, typeof Palette> = {
-  'style transfer': Palette,
-  'object manipulation': SquarePen,
-  'background change': ImageUp,
-  enhancement: Sparkles,
-  'artistic effects': Wand2,
-  other: Shapes,
+const categoryIconsMap: Record<PromptCategory, LucideIcon> = {
+  'art styles': Palette,
+  'scenes and themes': Landmark,
+  'animals and characters': PawPrint,
+  'storytelling and comics': BookOpenText,
+  'history and nostalgia': Camera,
+  'product and advertising': ShoppingBag,
+  'fantasy concepts and technical details': Wand2,
+  'prompt templates': ClipboardList,
+  'other': Shapes,
 };
 
 export async function submitPromptAction(
@@ -47,14 +61,24 @@ export async function submitPromptAction(
     const categorizationResult = await categorizeImagePrompts({ prompt: promptText });
     
     let category = categorizationResult.category.toLowerCase() as PromptCategory;
-    // Ensure category is one of the allowed types, default to 'other' if not.
-    const allowedCategories: PromptCategory[] = ['style transfer', 'object manipulation', 'background change', 'enhancement', 'artistic effects', 'other'];
+    
+    const allowedCategories: PromptCategory[] = [
+      'art styles',
+      'scenes and themes',
+      'animals and characters',
+      'storytelling and comics',
+      'history and nostalgia',
+      'product and advertising',
+      'fantasy concepts and technical details',
+      'prompt templates',
+      'other'
+    ];
     if (!allowedCategories.includes(category)) {
       category = 'other';
     }
 
     const newPrompt: Prompt = {
-      id: Date.now().toString(), // In a real app, this would be a UUID from a DB
+      id: Date.now().toString(), 
       text: promptText,
       category: category,
       description: `AI classified (Confidence: ${categorizationResult.confidence.toFixed(2)})`,
@@ -69,8 +93,10 @@ export async function submitPromptAction(
     };
   } catch (error) {
     console.error('Error categorizing prompt:', error);
+    // Check if error is an object and has a message property
+    const errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred';
     return {
-      message: 'Failed to categorize prompt. Please try again.',
+      message: `Failed to categorize prompt: ${errorMessage}. Please try again.`,
       success: false,
     };
   }

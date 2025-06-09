@@ -1,7 +1,19 @@
 import type { PromptCategory } from '@/types';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Palette, SquarePen, ImageUp, Sparkles, Wand2, Shapes, ListFilter } from 'lucide-react';
+import { 
+  Palette, 
+  Landmark, 
+  PawPrint, 
+  BookOpenText, 
+  Camera, 
+  ShoppingBag, 
+  Wand2, 
+  ClipboardList, 
+  Shapes, // For 'other'
+  ListFilter 
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface CategoryFilterProps {
   categories: PromptCategory[];
@@ -9,13 +21,16 @@ interface CategoryFilterProps {
   onSelectCategory: (category: PromptCategory | 'all') => void;
 }
 
-const categoryIcons: Record<PromptCategory, typeof Palette> = {
-  'style transfer': Palette,
-  'object manipulation': SquarePen,
-  'background change': ImageUp,
-  enhancement: Sparkles,
-  'artistic effects': Wand2,
-  other: Shapes,
+const categoryIcons: Record<PromptCategory, LucideIcon> = {
+  'art styles': Palette,
+  'scenes and themes': Landmark,
+  'animals and characters': PawPrint,
+  'storytelling and comics': BookOpenText,
+  'history and nostalgia': Camera,
+  'product and advertising': ShoppingBag,
+  'fantasy concepts and technical details': Wand2,
+  'prompt templates': ClipboardList,
+  'other': Shapes,
 };
 
 export function CategoryFilter({ categories, selectedCategory, onSelectCategory }: CategoryFilterProps) {
@@ -34,7 +49,7 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
         All
       </Button>
       {categories.map((category) => {
-        const IconComponent = categoryIcons[category];
+        const IconComponent = categoryIcons[category] || Shapes; // Fallback to Shapes icon
         return (
           <Button
             key={category}
@@ -46,7 +61,7 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
               selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-card hover:bg-accent/10"
             )}
           >
-            {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
+            <IconComponent className="h-4 w-4 mr-2" />
             {category}
           </Button>
         );

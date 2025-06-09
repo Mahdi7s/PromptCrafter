@@ -1,95 +1,120 @@
 
 import type { Prompt } from '@/types';
-import { Palette, SquarePen, ImageUp, Sparkles, Wand2, Shapes } from 'lucide-react';
+import { 
+  Palette, 
+  Landmark, 
+  PawPrint, 
+  BookOpenText, 
+  Camera, 
+  ShoppingBag, 
+  Wand2, 
+  ClipboardList, 
+  Shapes 
+} from 'lucide-react';
 
-export const initialPrompts: Prompt[] = [
-  {
-    id: '1',
-    text: 'Transform this photo into the style of Van Gogh\'s Starry Night.',
-    category: 'style transfer',
-    description: 'Applies a famous artistic style to an image.',
-    icon: Palette,
-    createdAt: new Date('2024-01-15T10:00:00Z')
-  },
-  {
-    id: '2',
-    text: 'Remove the person walking in the background.',
-    category: 'object manipulation',
-    description: 'Edits or removes objects within the image.',
-    icon: SquarePen,
-    createdAt: new Date('2024-01-16T11:30:00Z')
-  },
-  {
-    id: '3',
-    text: 'Change the background to a sunny beach.',
-    category: 'background change',
-    description: 'Replaces the existing background with a new one.',
-    icon: ImageUp,
-    createdAt: new Date('2024-01-17T14:20:00Z')
-  },
-  {
-    id: '4',
-    text: 'Enhance the colors and sharpness of this landscape photo.',
-    category: 'enhancement',
-    description: 'Improves image quality, colors, and details.',
-    icon: Sparkles,
-    createdAt: new Date('2024-01-18T09:00:00Z')
-  },
-  {
-    id: '5',
-    text: 'Apply a dreamy, ethereal glow effect.',
-    category: 'artistic effects',
-    description: 'Adds creative and artistic visual effects.',
-    icon: Wand2,
-    createdAt: new Date('2024-01-19T16:45:00Z')
-  },
-  {
-    id: '6',
-    text: 'Make the cat wear a tiny wizard hat.',
-    category: 'object manipulation',
-    description: 'Adds or modifies objects, often humorously.',
-    icon: SquarePen,
-    createdAt: new Date('2024-01-20T08:15:00Z')
-  },
-  {
-    id: '7',
-    text: 'Convert this portrait to a pencil sketch style.',
-    category: 'style transfer',
-    description: 'Mimics traditional art mediums.',
-    icon: Palette,
-    createdAt: new Date('2024-01-21T12:00:00Z')
-  },
-  {
-    id: '8',
-    text: 'Create a futuristic cityscape at night.',
-    category: 'other',
-    description: 'General image generation or complex scenes.',
-    icon: Shapes,
-    createdAt: new Date('2024-01-22T17:30:00Z')
-  },
-  {
-    id: '9',
-    text: 'Increase the resolution and detail of this old family photograph.',
-    category: 'enhancement',
-    description: 'Upscales and refines low-resolution or aged images.',
-    icon: Sparkles,
-    createdAt: new Date('2024-01-23T10:10:00Z')
-  },
-  {
-    id: '10',
-    text: 'Place this product on a clean, minimalist white background.',
-    category: 'background change',
-    description: 'Isolates an object and sets it against a neutral backdrop.',
-    icon: ImageUp,
-    createdAt: new Date('2024-01-24T11:45:00Z')
-  },
-  {
-    id: '11',
-    text: 'Render this scene as a watercolor painting with soft edges.',
-    category: 'artistic effects',
-    description: 'Simulates a specific artistic medium and technique.',
-    icon: Wand2,
-    createdAt: new Date('2024-01-25T15:05:00Z')
-  },
-];
+const userPromptsData = {
+  "ImagePrompts": [
+    {
+      "category": "Art Styles",
+      "icon": Palette,
+      "examples": [
+        "Make this in Studio Ghibli style",
+        "Japan anime style with sunset",
+        "Make this image a soft watercolor painting",
+        "Turn this into a claymation scene",
+        "Make it cyberpunk style with glowing lights",
+        "Turn this cityscape into LEGO world",
+        "Create a cut-paper collage",
+        "Make this photo look folded from paper"
+      ]
+    },
+    {
+      "category": "Scenes and Themes",
+      "icon": Landmark,
+      "examples": [
+        "A photorealistic image of a futuristic Tokyo street at night in 2070 with glowing robot pets",
+        "Visualize 'nostalgia' as a landscape: an abandoned playground, faded polaroid photos",
+        "Generate a rugged coastline at golden hour with waves crashing and seabirds in flight"
+      ]
+    },
+    {
+      "category": "Animals and Characters",
+      "icon": PawPrint,
+      "examples": [
+        "Turn this photo of my pet into a cyberpunk-style portrait",
+        "Create an image of a duck wearing a straw hat"
+      ]
+    },
+    {
+      "category": "Storytelling and Comics",
+      "icon": BookOpenText,
+      "examples": [
+        "Make a 4-panel comic strip",
+        "Create a comic strip from a literary work",
+        "Create a meme image featuring [subject], styled in [meme format or art style]"
+      ]
+    },
+    {
+      "category": "History and Nostalgia",
+      "icon": Camera,
+      "examples": [
+        "Create a vintage Polaroid-style photo of Summer '79",
+        "Generate an image of me taking a selfie with a famous historical figure"
+      ]
+    },
+    {
+      "category": "Product and Advertising",
+      "icon": ShoppingBag,
+      "examples": [
+        "Create a sleek product shot of minimalist wireless headphones with studio lighting",
+        "Design a holographic tarot card",
+        "Create a custom vinyl record cover"
+      ]
+    },
+    {
+      "category": "Fantasy Concepts and Technical Details",
+      "icon": Wand2,
+      "examples": [
+        "Chibi 3D kawaii sticker",
+        "Bobblehead figurine style",
+        "Cross-sectional diagram of a sci-fi spaceship engine with labeled parts"
+      ]
+    },
+    {
+      "category": "Prompt Templates",
+      "icon": ClipboardList,
+      "examples": [
+        "Create a [scene/subject] in [art style] with [specific details: lighting, color, background, effects]",
+        "Create a whimsical character design: a fox wizard in a forest, in watercolour style with glowing runes and misty lighting"
+      ]
+    }
+  ]
+};
 
+export const initialPrompts: Prompt[] = [];
+let idCounter = 1;
+const baseDate = new Date();
+
+userPromptsData.ImagePrompts.forEach(categoryData => {
+  const categoryName = categoryData.category.toLowerCase() as Prompt['category'];
+  categoryData.examples.forEach(exampleText => {
+    initialPrompts.push({
+      id: (idCounter++).toString(),
+      text: exampleText,
+      category: categoryName,
+      // description: `Example prompt for ${categoryData.category}`, // Optional: add description
+      icon: categoryData.icon,
+      createdAt: new Date(baseDate.getTime() - idCounter * 1000), // Stagger createdAt for consistent sort order
+    });
+  });
+});
+
+// Example of an 'other' category prompt if needed
+// initialPrompts.push({
+//   id: (idCounter++).toString(),
+//   text: 'Generate an abstract image representing digital transformation.',
+//   category: 'other',
+//   description: 'A generic prompt that does not fit other categories.',
+//   icon: Shapes,
+//   createdAt: new Date(baseDate.getTime() - idCounter * 1000),
+// });

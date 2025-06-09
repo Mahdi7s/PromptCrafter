@@ -1,11 +1,14 @@
 import type { LucideIcon } from 'lucide-react';
 
 export type PromptCategory =
-  | 'style transfer'
-  | 'object manipulation'
-  | 'background change'
-  | 'enhancement'
-  | 'artistic effects'
+  | 'art styles'
+  | 'scenes and themes'
+  | 'animals and characters'
+  | 'storytelling and comics'
+  | 'history and nostalgia'
+  | 'product and advertising'
+  | 'fantasy concepts and technical details'
+  | 'prompt templates'
   | 'other';
 
 export interface Prompt {
@@ -18,10 +21,13 @@ export interface Prompt {
 }
 
 export const PromptCategoriesList: PromptCategory[] = [
-  'style transfer',
-  'object manipulation',
-  'background change',
-  'enhancement',
-  'artistic effects',
+  'art styles',
+  'scenes and themes',
+  'animals and characters',
+  'storytelling and comics',
+  'history and nostalgia',
+  'product and advertising',
+  'fantasy concepts and technical details',
+  'prompt templates',
   'other',
 ];
